@@ -1,0 +1,11 @@
+version: '3.1'
+
+services:
+  video_capture:
+    image: achuang/video_capture:0.1.0
+    restart: always
+    volumes:
+      - capture-volume:/app
+
+volumes:
+  capture-volume:
