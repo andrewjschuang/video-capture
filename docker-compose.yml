@@ -2,8 +2,10 @@ version: '3.1'
 
 services:
   video_capture:
-    image: achuang/video_capture:0.1.0
+    image: andrewjsc/video_capture:0.1.0
     restart: always
+    devices:
+      - /dev/video0:/dev/video0
     volumes:
       - capture-volume:/app
 

@@ -3,10 +3,11 @@ import threading
 import requests
 import time
 import json
+import os
 from PIL import Image
 
 video_source = 0
-url = 'http://127.0.0.1:5000'
+url = os.getenv('BMSISP', 'http://bmsisp:5000')
 
 def capture():
     count = 0
@@ -25,7 +26,7 @@ def capture():
 
 def send(filename):
     r = requests.post(url, files={'file': open(filename, 'rb')})
-    # print('frame sent. status code: %s. response: %s' % (r.status_code, r.text), end='')
+    print('frame sent. status code: %s. response: %s' % (r.status_code, r.text))
     return
 
 if __name__ == '__main__':
