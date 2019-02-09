@@ -12,18 +12,20 @@ def send(image):
     print('sending frame')
     try:
         r = requests.post(url, files={'file': image})
+        del image
         print('frame sent. status code: %s' % r.status_code)
     except Exception as e:
         print(e)
 
 if __name__ == '__main__':
     try:
-        os.mkdir('frames')
+        video_source = int(video_source)
     except:
         pass
 
     video_capture = cv2.VideoCapture(video_source)
     if not video_capture.isOpened():
+        print('error opening video source %s' % video_source)
         exit(1)
 
     while True:
