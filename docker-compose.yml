@@ -7,5 +7,7 @@ services:
     environment:
       VIDEO_SOURCE: 0
       BMSISP: 'http://localhost:5000'
+    ports:
+      - 5001:5000
     devices:
       - /dev/video0:/dev/video0
