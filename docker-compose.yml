@@ -2,10 +2,10 @@ version: '3.2'
 
 services:
   video_capture:
-    image: andrewjsc/video_capture:0.1.1
+    image: andrewjsc/video_capture:0.1.2
     restart: always
     environment:
       VIDEO_SOURCE: 0
-      BMSISP: 'http://bmsisp:5000'
+      BMSISP: 'http://localhost:5000'
     devices:
       - /dev/video0:/dev/video0

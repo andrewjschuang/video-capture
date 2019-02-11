@@ -3,42 +3,47 @@ import threading
 import requests
 import time
 import os
+import random
 from PIL import Image
-from io import BytesIO
 
-video_source = os.getenv('VIDEO_SOURCE', 0)
-url = os.getenv('BMSISP', 'http://localhost:5000')
+class VideoCapture():
+    def __init__(self, url='http://localhost:5000/api', video_source=0):
+        try:
+            os.mkdir('frames')
+        except:
+            pass
+        self.files = ['frames/' + x for x in os.listdir('frames')]
+        self.run = True
+        self.url = url
+        self.video_capture = cv2.VideoCapture(video_source)
 
-def send(filename):
-    print('sending frame')
-    try:
-        img = open(filename, 'rb')
-        r = requests.post(url, files={'file': img})
-        img.close()
-        threading.Thread(target=os.remove, args=(filename,)).start()
-        print('frame sent. status code: %s' % r.status_code)
-    except Exception as e:
-        print(e)
+    def configure(self, video_source):
+        self.video_capture.release()
+        try:
+            self.video_capture = cv2.VideoCapture(video_source)
+            if not self.video_capture.isOpened():
+                print('error opening video source %s' % video_source)
+                exit(1)
+        except:
+            print('couldnt configure video_source')
 
-if __name__ == '__main__':
-    try:
-        video_source = int(video_source)
-    except:
-        pass
+    def start(self, sleep=0.5):
+        while self.run:
+            ret, frame = self.video_capture.read()
+            if ret:
+                print('got new frame')
+                pil_image = Image.fromarray(frame)
+                f = 'frames/' + str(random.getrandbits(128)) + '.jpg'
+                pil_image.save(f)
+                self.files.append(f)
+                threading.Thread(target=self.send, args=(f,)).start()
+            time.sleep(sleep)
 
-    video_capture = cv2.VideoCapture(video_source)
-    if not video_capture.isOpened():
-        print('error opening video source %s' % video_source)
-        exit(1)
-
-    n = 0
-    while True:
-        ret, frame = video_capture.read()
-        if ret:
-            print('got new frame')
-            pil_image = Image.fromarray(frame)
-            filename = 'frames/img' + str(n) + '.jpg'
-            pil_image.save(filename)
-            threading.Thread(target=send, args=(filename,)).start()
-            n += 1
-        time.sleep(0.5)
+    def send(self, f):
+        print('sending frame')
+        try:
+            with open(f, 'rb') as img:
+                r = requests.post(self.url, files={'file': img})
+                print(r.text)
+        except Exception as e:
+            print(e)
