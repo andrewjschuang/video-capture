@@ -9,8 +9,9 @@ from queue import Queue
 
 logging.basicConfig(level=logging.INFO)
 
+
 class VideoCapture():
-    def __init__(self, url='http://localhost:5000/api', video_source=0):
+    def __init__(self, url, video_source=0):
         self.ensure_directory_exists('frames')
         self.files = ['frames/' + x for x in os.listdir('frames')]
         self.run = True
@@ -37,7 +38,7 @@ class VideoCapture():
         return video_capture
 
 
-    def configure(self, video_source):
+    def configure_video_source(self, video_source):
         self.video_capture.release()
         self.video_capture = self.initialize_video_capture(video_source)
 

@@ -1,10 +1,12 @@
 from flask import Flask, request
+from flask_cors import CORS
 from video_capture import VideoCapture
 import threading
 import os
 import logging
 
 app = Flask(__name__)
+CORS(app)
 vc = VideoCapture()
 logging.basicConfig(level=logging.INFO)
 
@@ -18,7 +20,7 @@ def remove(file):
 
 @app.route('/', methods=['GET'])
 def index():
-    return 'Use /start or /stop!'
+    return {}, 200
 
 
 @app.route('/configure', methods=['GET'])
@@ -31,11 +33,12 @@ def configure():
 
     if video_source:
         try:
-            vc.configure(int(video_source))
+            vc.configure_video_source(int(video_source))
         except ValueError:
-            vc.configure(video_source)
+            logger.error(f"Invalid video source: {video_source}, needs to be an integer")
+            return { "error": "video_source must be integer" }, 400
 
-    return 'configured'
+    return {}, 200
 
 
 @app.route('/start', methods=['GET'])
@@ -43,7 +46,7 @@ def start():
     vc.run = True
     threading.Thread(target=vc.start, daemon=True).start()
     logging.info('Started')
-    return 'started'
+    return {}, 200
 
 
 @app.route('/stop', methods=['GET'])
@@ -55,7 +58,7 @@ def stop():
             file = vc.files.pop()
             threading.Thread(target=remove, args=(file,), daemon=True).start()
     logging.info('Stopped')
-    return 'stopped'
+    return {}, 200
 
 
 if __name__ == '__main__':
