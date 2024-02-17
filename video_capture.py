@@ -49,7 +49,8 @@ class VideoCapture():
                 logging.info('Got new frame')
                 current_datetime = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
                 file = f'frames/{current_datetime}.jpg'
-                Image.fromarray(frame).save(file)
+                rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                Image.fromarray(rgb_frame).save(file)
                 self.files.append(file)
                 self.frame_queue.put(file)
             time.sleep(sleep)
