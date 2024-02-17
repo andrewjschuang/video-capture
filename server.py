@@ -11,7 +11,7 @@ def remove(f):
         os.remove(f)
     except:
         pass
-    
+
 @app.route('/', methods=['GET'])
 def index():
     return 'Use /start or /stop!'
@@ -39,12 +39,13 @@ def start():
 @app.route('/stop', methods=['GET'])
 def stop():
     vc.run = False
-    print('cleaning up...')
-    while len(vc.files) > 0:
-        f = vc.files.pop()
-        threading.Thread(target=remove, args=(f,)).start()
+    clean = False
+    if clean:
+        print('cleaning up...')
+        while len(vc.files) > 0:
+            f = vc.files.pop()
+            threading.Thread(target=remove, args=(f,)).start()
     print('stopped')
-
     return 'stopped'
 
 if __name__ == '__main__':
