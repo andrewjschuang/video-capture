@@ -11,11 +11,12 @@ logging.basicConfig(level=logging.INFO)
 
 
 class VideoCapture():
-    def __init__(self, url, video_source=0):
+    def __init__(self, url="http://localhost:5000/api", video_source=0):
         self.ensure_directory_exists('frames')
         self.files = ['frames/' + x for x in os.listdir('frames')]
         self.run = True
         self.url = url
+        self.video_source = video_source
         self.video_capture = self.initialize_video_capture(video_source)
         self.frame_queue = Queue()
         self.sender_thread = threading.Thread(target=self.send_frames, daemon=True)

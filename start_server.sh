@@ -1,5 +1,5 @@
-export FLASK_APP=server.py
+export FLASK_APP="backend/server.py"
+export FLASK_DEBUG=true
 
 echo dont forget to use /configure!
-
-flask run --host=0.0.0.0 --port 5001
+flask run

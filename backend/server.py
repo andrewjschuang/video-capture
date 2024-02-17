@@ -1,9 +1,9 @@
 from flask import Flask, request
 from flask_cors import CORS
-from video_capture import VideoCapture
 import threading
-import os
 import logging
+import os
+from backend.video_capture import VideoCapture
 
 app = Flask(__name__)
 CORS(app)
@@ -25,7 +25,7 @@ def index():
 
 @app.route('/configure', methods=['GET'])
 def configure():
-    url = request.args.get('url')
+    url = request.args.get('url', "")
     video_source = request.args.get('video_source', '0')
 
     if url:
@@ -36,9 +36,9 @@ def configure():
             vc.configure_video_source(int(video_source))
         except ValueError:
             logger.error(f"Invalid video source: {video_source}, needs to be an integer")
-            return { "error": "video_source must be integer" }, 400
+            return { "data": { "configured": False }, "error": "video_source must be integer" }, 400
 
-    return {}, 200
+    return { "data": { "configured": True, "url": vc.url, "video_source": vc.video_source } }, 200
 
 
 @app.route('/start', methods=['GET'])
@@ -46,7 +46,7 @@ def start():
     vc.run = True
     threading.Thread(target=vc.start, daemon=True).start()
     logging.info('Started')
-    return {}, 200
+    return { "data": { "running": True } }, 200
 
 
 @app.route('/stop', methods=['GET'])
@@ -58,10 +58,10 @@ def stop():
             file = vc.files.pop()
             threading.Thread(target=remove, args=(file,), daemon=True).start()
     logging.info('Stopped')
-    return {}, 200
+    return { "data": { "running": False } }, 200
 
 
 if __name__ == '__main__':
     host = os.getenv('FLASK_HOST', '0.0.0.0')
     port = os.getenv('FLASK_PORT', 5001)
-    app.run(host=host, port=port, debug=bool(os.getenv('FLASK_DEBUG', False)))
+    app.run(host=host, port=port, debug=bool(os.getenv('FLASK_DEBUG', True)))
