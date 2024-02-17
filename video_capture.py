@@ -33,10 +33,10 @@ class VideoCapture():
             if ret:
                 print('got new frame')
                 pil_image = Image.fromarray(frame)
-                f = 'frames/' + str(random.getrandbits(128)) + '.jpg'
-                pil_image.save(f)
-                self.files.append(f)
-                threading.Thread(target=self.send, args=(f,)).start()
+                filename = f'frames/{time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())}.jpg'
+                pil_image.save(filename)
+                self.files.append(filename)
+                threading.Thread(target=self.send, args=(filename,)).start()
             time.sleep(sleep)
 
     def send(self, f):
