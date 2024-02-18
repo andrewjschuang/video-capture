@@ -4,8 +4,8 @@
             Your browser does not support the video tag.
         </video>
         <div class="controls" style="text-align: center; margin-top: 20px;">
-            <button @click="startRecording">Start</button>
-            <button @click="stopRecording">Stop</button>
+            <button class="button" @click="startRecording">Start</button>
+            <button class="button" @click="stopRecording">Stop</button>
         </div>
     </div>
 </template>
@@ -37,9 +37,26 @@ const stopRecording = async () => {
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     background-color: #f0f0f0;
     color: #333;
     font-size: 20px;
     border: 3px dashed #ccc;
+}
+
+.button {
+    font-size: 16px;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #555;
 }
 </style>

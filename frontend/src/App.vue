@@ -11,8 +11,10 @@ import VideoContainer from './components/VideoContainer.vue'
 <style scoped>
 .camera-view-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   min-height: 100vh;
+  padding: 20px;
 }
 </style>
