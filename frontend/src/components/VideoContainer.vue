@@ -97,6 +97,37 @@ for (let i = 1; i <= 100; i++) {
     transition: transform 0.3s ease-in-out;
 }
 
+.image-container {
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: top;
+    position: relative;
+    width: 300px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.image-container::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: top 0.5s ease;
+    z-index: 0;
+}
+
+.image-container:hover::before {
+    top: 0;
+}
+
+.image-container:hover .image {
+    transform: translateY(-100%);
+}
+
 .image {
     display: block;
     flex: 0 0 auto;
@@ -105,13 +136,13 @@ for (let i = 1; i <= 100; i++) {
     object-fit: cover;
     border-radius: 10px;
     opacity: 0.6;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+    transition: transform 0.2s ease;
 }
 
-/* .image:last-child {
+.image:last-child {
     margin-right: 0px;
-} */
+}
 
 .image:hover {
     transform: scale(1.05);
