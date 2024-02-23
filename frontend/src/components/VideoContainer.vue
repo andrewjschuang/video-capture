@@ -10,7 +10,8 @@
     </div>
     <div class="image-stack">
         <div v-for="(image, index) in images" :key="image.id" class="image-container">
-            <img v-if="index < MAX_IMAGES" :src="image.src" :alt="`Image ${index + 1}`" class="image" />
+            <img v-if="index < MAX_IMAGES" :src="image.src" class="image" />
+            <img v-if="index < MAX_IMAGES" :src="image.src" class="matched-image" />
         </div>
     </div>
 </template>
@@ -94,7 +95,6 @@ for (let i = 1; i <= 100; i++) {
     position: relative;
     display: flex;
     flex-wrap: nowrap;
-    transition: transform 0.3s ease-in-out;
 }
 
 .image-container {
@@ -107,48 +107,26 @@ for (let i = 1; i <= 100; i++) {
     border-radius: 10px;
 }
 
-.image-container::before {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    transition: top 0.5s ease;
-    z-index: 0;
+.image-container:last-child {
+    margin-right: 0px;
 }
 
-.image-container:hover::before {
-    top: 0;
-}
-
-.image-container:hover .image {
-    transform: translateY(-100%);
-}
-
-.image {
+.image, .matched-image {
+    object-fit: cover;
     display: block;
     flex: 0 0 auto;
     width: 300px;
     height: auto;
     object-fit: cover;
     border-radius: 10px;
-    opacity: 0.6;
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     transition: transform 0.2s ease;
 }
 
-.image:last-child {
-    margin-right: 0px;
+.matched-image {
+    transform: translateY(-100%);
 }
 
-.image:hover {
-    transform: scale(1.05);
-    z-index: 10;
-    position: relative;
-    border-radius: 15px;
-    opacity: 1;
+.image-container:hover .matched-image {
+    transform: translateY(0%);
 }
 </style>
