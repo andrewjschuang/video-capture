@@ -8,11 +8,17 @@
             <button class="button" @click="stopRecording">Stop</button>
         </div>
     </div>
+    <div>
+        <button class="button" @click="addImage">Add Image</button>
+        <button class="button" @click="removeImage">Remove Image</button>
+    </div>
     <div class="image-stack">
-        <div v-for="(image, index) in images" :key="image.id" class="image-container">
-            <img v-if="index < MAX_IMAGES" :src="image.src" class="image" />
-            <img v-if="index < MAX_IMAGES" :src="image.src" class="matched-image" />
-        </div>
+        <transition-group name="list" tag="div">
+            <div v-for="image in images" :key="image.id" class="image-container">
+                <img :src="image.src" class="image" />
+                <img :src="image.src" class="matched-image" />
+            </div>
+        </transition-group>
     </div>
 </template>
 
@@ -48,17 +54,22 @@ const stopRecording = async () => {
     console.log('Stop recording...');
 };
 
-const MAX_IMAGES = 20;
 const images = ref([]);
-for (let i = 1; i <= 100; i++) {
-    images.value.push({ id: i, src: imageSrc });
+for (let i = 1; i <= 5; i++) {
+    images.value.push({ key: i, src: imageSrc });
+}
+const addImage = async () => {
+    images.value.push({ id: `${Math.random()}`, src: imageSrc });
+}
+const removeImage = async () => {
+    images.value.pop();
 }
 </script>
 
 <style scoped>
 .default-box {
     width: 80%;
-    height: 500px;
+    height: 400px;
     margin: auto;
     display: flex;
     justify-content: center;
@@ -89,12 +100,13 @@ for (let i = 1; i <= 100; i++) {
 .image-stack {
     margin-top: 50px;
     overflow-x: scroll;
-    overflow-y: hidden;
-    max-width: 100vw;
+    width: 100vw;
+    /* min-height: 330px; */
     white-space: nowrap;
     position: relative;
     display: flex;
     flex-wrap: nowrap;
+    background-color: #333;
 }
 
 .image-container {
@@ -107,8 +119,21 @@ for (let i = 1; i <= 100; i++) {
     border-radius: 10px;
 }
 
+.list-enter-active, .list-leave-active {
+    transition: all 0.5s ease;
+}
+
+.list-enter-from, .list-leave-to {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.image-container:first-child {
+    margin-left: 5px;
+}
+
 .image-container:last-child {
-    margin-right: 0px;
+    margin-right: 5px;
 }
 
 .image, .matched-image {
