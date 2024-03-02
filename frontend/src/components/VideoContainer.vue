@@ -56,13 +56,18 @@ const stopRecording = async () => {
 
 const images = ref([]);
 for (let i = 1; i <= 5; i++) {
-    images.value.push({ key: i, src: imageSrc });
+    images.value.push({ id: i, src: imageSrc });
 }
 const addImage = async () => {
     images.value.push({ id: `${Math.random()}`, src: imageSrc });
 }
 const removeImage = async () => {
-    images.value.pop();
+    for (let i = 0; i < images.value.length; i++) {
+        if (images.value[i].id === 2 || images.value[i].id === 4) {
+            images.value.splice(i, 1);
+        }
+    }
+    // images.value.pop();
 }
 </script>
 
@@ -128,7 +133,7 @@ const removeImage = async () => {
 }
 
 .list-leave-active {
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.5s ease, opacity 0.3s ease;
 }
 
 .list-leave {
