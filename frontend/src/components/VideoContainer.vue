@@ -106,7 +106,6 @@ const removeImage = async () => {
     position: relative;
     display: flex;
     flex-wrap: nowrap;
-    background-color: #333;
 }
 
 .image-container {
