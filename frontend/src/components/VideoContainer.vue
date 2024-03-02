@@ -10,13 +10,12 @@
     </div>
     <div>
         <button class="button" @click="addImage">Add Image</button>
-        <button class="button" @click="removeImage">Remove Image</button>
     </div>
     <div class="image-stack">
         <transition-group name="list" tag="div">
-            <div v-for="image in images" :key="image.id" class="image-container">
-                <img :src="image.src" class="image" />
-                <img :src="image.src" class="matched-image" />
+            <div v-for="x in images" :key="x.image.id" class="image-container">
+                <img :src="x.image.src" @click="removeImage(x.image.id)" class="image" />
+                <img :src="x.matched.src" @click="removeImage(x.image.id)" class="matched-image" />
             </div>
         </transition-group>
     </div>
@@ -38,6 +37,19 @@ fetch(image)
         }
     });
 
+import matchedImage from '@/assets/images/2024-02-17_13-10-04.jpg';
+const matchedImageSrc = ref('');
+fetch(matchedImage)
+    .then((res) => res.blob())
+    .then((blob) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+            const base64data = reader.result;
+            matchedImageSrc.value = base64data;
+        }
+    });
+
 
 const recording = ref(false);
 const border = computed(() => recording.value ? '2px solid red' : '2px solid #f0f0f0');
@@ -55,14 +67,28 @@ const stopRecording = async () => {
 };
 
 const images = ref([]);
-for (let i = 1; i <= 5; i++) {
-    images.value.push({ key: i, src: imageSrc });
+const mock = (id) => ({
+    matched: {
+        id: id,
+        src: matchedImageSrc,
+        name: "Andrew",
+    },
+    image: {
+        id: id,
+        src: imageSrc,
+    },
+});
+
+for (let i = 1; i <= 3; i++) {
+    images.value.push(mock(1));
 }
+images.value.push(mock(2))
+images.value.push(mock(2))
 const addImage = async () => {
-    images.value.push({ id: `${Math.random()}`, src: imageSrc });
+    images.value.push(mock(Math.random()));
 }
-const removeImage = async () => {
-    images.value.pop();
+const removeImage = async (id) => {
+    images.value = images.value.filter((x) => x.image.id !== id);
 }
 </script>
 
@@ -128,7 +154,7 @@ const removeImage = async () => {
 }
 
 .list-leave-active {
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.5s ease, opacity 0.3s ease;
 }
 
 .list-leave {
@@ -158,10 +184,19 @@ const removeImage = async () => {
     object-fit: cover;
     border-radius: 10px;
     transition: transform 0.2s ease;
+    border: 3px solid transparent;
 }
 
 .matched-image {
     transform: translateY(-100%);
+}
+
+.image:hover {
+    border-color: #B22222;
+}
+
+.matched-image:hover {
+    border-color: #3CB371;
 }
 
 .image-container:hover .matched-image {
