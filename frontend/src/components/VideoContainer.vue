@@ -119,12 +119,26 @@ const removeImage = async () => {
     border-radius: 10px;
 }
 
-.list-enter-active, .list-leave-active {
+.list-enter-active {
     transition: all 0.5s ease;
 }
 
-.list-enter-from, .list-leave-to {
+.list-enter-from {
     transform: translateX(100%);
+    opacity: 0;
+}
+
+.list-leave-active {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.list-leave {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.list-leave-to {
+    transform: scale(1.1);
     opacity: 0;
 }
 
